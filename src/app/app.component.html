@@ -128,10 +128,13 @@
         </p>
 
         <h4 class="hero-sub-title">Live Music Events</h4>
-        <h2 class="hero-title">
+        <h2
+          class="hero-title"
+          (mousemove)="onTitleMouseMove($event)"
+          (mouseleave)="onTitleMouseLeave($event)"
+        >
           We Bring<br />
           The Show
-          <span class="hero-accent">2026</span>
         </h2>
 
         <p class="hero-desc">

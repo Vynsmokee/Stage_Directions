@@ -28,6 +28,21 @@ export class AppComponent implements OnInit {
     this.headerScrolled = window.scrollY > 40;
   }
 
+  onTitleMouseMove(e: MouseEvent): void {
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    el.style.setProperty('--mx', `${x.toFixed(1)}%`);
+    el.style.setProperty('--my', `${y.toFixed(1)}%`);
+  }
+
+  onTitleMouseLeave(e: MouseEvent): void {
+    const el = e.currentTarget as HTMLElement;
+    el.style.removeProperty('--mx');
+    el.style.removeProperty('--my');
+  }
+
   ngOnInit(): void {
     setTimeout(() => this.exitPreloader(), 2500);
   }
