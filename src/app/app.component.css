@@ -1,0 +1,259 @@
+/* ========================= Preloader ========================= */
+
+.preloader {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 999;
+}
+
+.preloader svg {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 110vh;
+  fill: #111;
+}
+
+/* SVG path morph: flat bottom → concave arch → flat top */
+@keyframes pathMorph {
+  0% {
+    d: path("M0,1005S175,995,500,995s500,5,500,5V0H0Z");
+  }
+  50% {
+    d: path("M0 502S175 272 500 272s500 230 500 230V0H0Z");
+  }
+  100% {
+    d: path("M0 2S175 1 500 1s500 1 500 1V0H0Z");
+  }
+}
+
+/* Whole screen slides up */
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-110vh);
+  }
+}
+
+/* Text exits upward */
+@keyframes textExit {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+}
+
+/* One class triggers everything — CSS handles timing, zero JS gaps */
+.preloader.is-exiting .preloader-heading {
+  animation: textExit 0.35s ease-in forwards;
+}
+
+.preloader.is-exiting #preloaderSvg {
+  animation: pathMorph 0.85s ease-in-out forwards;
+}
+
+.preloader.is-exiting {
+  animation: slideUp 0.65s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  animation-delay: 0.85s;
+}
+
+.preloader .preloader-heading .load-text {
+  font-size: 30px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 15px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  z-index: 20;
+}
+
+@media screen and (max-width: 480px) {
+  .preloader .preloader-heading .load-text {
+    font-size: 22px;
+    letter-spacing: 8px;
+  }
+}
+
+.load-text span {
+  display: inline-block;
+  animation: loading 1s infinite alternate;
+}
+
+.load-text span:nth-child(1) {
+  animation-delay: 0s;
+}
+.load-text span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.load-text span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.load-text span:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.load-text span:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.load-text span:nth-child(6) {
+  animation-delay: 0.5s;
+}
+.load-text span:nth-child(7) {
+  animation-delay: 0.6s;
+}
+.load-text span:nth-child(8) {
+  animation-delay: 0.7s;
+}
+
+@keyframes loading {
+  0% {
+    opacity: 1;
+    color: #ffffff;
+  }
+  30% {
+    color: #da178e;
+  }
+  60% {
+    color: #068c54;
+  }
+  85% {
+    color: #4950a2;
+  }
+  100% {
+    opacity: 0;
+    color: #ffffff;
+  }
+}
+
+/* ========================= Hero — banner-five ========================= */
+
+.hero-area {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: clamp(40px, 6vh, 100px);
+}
+
+.container {
+  max-width: 1800px;
+  width: 100%;
+  padding-inline: 1.5rem;
+  margin-inline: auto;
+}
+
+.hero-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .hero-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── Left: text ── */
+.hero-left {
+  flex: 0 1 75%;
+}
+
+.hero-sub-title {
+  font-family: "Caveat", cursive;
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: 400;
+  color: #da178e;
+  margin-bottom: 0.25rem;
+  line-height: 1.1;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 10vw, 140px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.hero-accent {
+  color: #da178e;
+  text-decoration: underline;
+  text-underline-offset: 0.1em;
+}
+
+/* ── Right: rotating circle ── */
+.hero-right {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-self: flex-end;
+  padding-bottom: 0.5rem;
+}
+
+.rotating-text {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rotating-text-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: rotateRight 10s linear infinite;
+}
+
+@keyframes rotateRight {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating-text-icon {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  z-index: 1;
+}
+
+@media (max-width: 767px) {
+  .rotating-text {
+    width: 110px;
+    height: 110px;
+  }
+  .rotating-text-svg {
+    width: 110px;
+    height: 110px;
+  }
+}

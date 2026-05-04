@@ -1,11 +1,71 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+@if (!curtainDone) {
+  <div class="preloader">
+    <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <path
+        id="preloaderSvg"
+        d="M0,1005S175,995,500,995s500,5,500,5V0H0Z"
+      ></path>
+    </svg>
+    <div class="preloader-heading">
+      <div class="load-text">
+        @for (letter of loadingLetters; track $index) {
+          <span [style.animation-delay]="$index * 0.1 + 's'">{{ letter }}</span>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<section
+  class="hero-area bg-img"
+  style="background-image: url(&quot;banner-five-bg.webp&quot;)"
+>
+  <div class="container">
+    <div class="hero-inner">
+      <!-- Left: text -->
+      <div class="hero-left">
+        <h4 class="hero-sub-title">Music Events</h4>
+        <h2 class="hero-title">
+          <strong>Music</strong> and Brand
+          <span class="hero-accent">2026</span>
+        </h2>
+      </div>
+
+      <!-- Right: rotating circle badge -->
+      <div class="hero-right">
+        <div class="rotating-text">
+          <!-- rotating text ring -->
+          <svg
+            class="rotating-text-svg"
+            viewBox="0 0 160 160"
+            width="160"
+            height="160"
+            aria-hidden="true"
+          >
+            <defs>
+              <path
+                id="cp"
+                d="M 80,80 m -55,0 a 55,55 0 1,1 110,0 a 55,55 0 1,1 -110,0"
+              />
+            </defs>
+            <text
+              fill="white"
+              font-size="10.5"
+              font-family="sans-serif"
+              letter-spacing="4"
+            >
+              <textPath href="#cp">
+                STAGE DIRECTIONS • STAGE DIRECTIONS •
+              </textPath>
+            </text>
+          </svg>
+          <!-- centre icon -->
+          <span class="rotating-text-icon">SD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <style>
   :host {
@@ -36,8 +96,17 @@
 
     --pill-accent: var(--bright-blue);
 
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Helvetica,
+      Arial,
+      sans-serif,
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
       "Segoe UI Symbol";
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -51,8 +120,17 @@
     line-height: 100%;
     letter-spacing: -0.125rem;
     margin: 0;
-    font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    font-family:
+      "Inter Tight",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Helvetica,
+      Arial,
+      sans-serif,
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
       "Segoe UI Symbol";
   }
 
@@ -231,19 +309,26 @@
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
       <div class="pill-group">
-        @for (item of [
-          { title: 'Explore the Docs', link: 'https://angular.dev' },
-          { title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' },
-          { title: 'CLI Docs', link: 'https://angular.dev/tools/cli' },
-          { title: 'Angular Language Service', link: 'https://angular.dev/tools/language-service' },
-          { title: 'Angular DevTools', link: 'https://angular.dev/tools/devtools' },
-        ]; track item.title) {
-          <a
-            class="pill"
-            [href]="item.link"
-            target="_blank"
-            rel="noopener"
-          >
+        @for (
+          item of [
+            { title: "Explore the Docs", link: "https://angular.dev" },
+            {
+              title: "Learn with Tutorials",
+              link: "https://angular.dev/tutorials",
+            },
+            { title: "CLI Docs", link: "https://angular.dev/tools/cli" },
+            {
+              title: "Angular Language Service",
+              link: "https://angular.dev/tools/language-service",
+            },
+            {
+              title: "Angular DevTools",
+              link: "https://angular.dev/tools/devtools",
+            },
+          ];
+          track item.title
+        ) {
+          <a class="pill" [href]="item.link" target="_blank" rel="noopener">
             <span>{{ item.title }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -331,5 +416,3 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-
