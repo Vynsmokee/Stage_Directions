@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -10,20 +10,23 @@ export class AppComponent implements OnInit {
   title = 'Stage_Directions';
 
   curtainDone = false;
+  headerScrolled = false;
+  mobileMenuOpen = false;
 
   readonly loadingLetters = 'CARGANDO'.split('');
 
-  readonly marqueeItems = [
-    'Stage Directions —',
-    'Design Event —',
-    'Conference —',
-    'Stage Directions —',
-    'Design Event —',
-    'Conference —',
-    'Stage Directions —',
-    'Design Event —',
-    'Conference —',
+  readonly navLinks = [
+    { label: 'About', href: '#' },
+    { label: 'Services', href: '#' },
+    { label: 'Our Work', href: '#' },
+    { label: 'Latest News', href: '#' },
+    { label: 'Contact', href: '#' },
   ];
+
+  @HostListener('window:scroll')
+  onScroll(): void {
+    this.headerScrolled = window.scrollY > 40;
+  }
 
   ngOnInit(): void {
     setTimeout(() => this.exitPreloader(), 2500);
@@ -34,11 +37,7 @@ export class AppComponent implements OnInit {
       '.preloader',
     ) as HTMLElement | null;
     if (!preloader) return;
-
-    // Add one class → CSS handles all phases with no JS gaps
     preloader.classList.add('is-exiting');
-
-    // Remove from DOM after all animations finish (~1.6s total)
     setTimeout(() => {
       this.curtainDone = true;
     }, 1650);
