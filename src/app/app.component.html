@@ -113,10 +113,19 @@
 </header>
 
 <section
-  class="hero-area bg-img"
+  class="hero-area"
   [class.hero-visible]="curtainDone"
-  style="background-image: url(&quot;banner-five-bg.webp&quot;)"
 >
+  <!-- Background video -->
+  <video
+    class="hero-video"
+    src="herovideostage.webm"
+    autoplay
+    muted
+    loop
+    playsinline
+    aria-hidden="true"
+  ></video>
   <div class="container">
     <div class="hero-inner">
       <!-- Left: text -->
@@ -127,7 +136,7 @@
           Stage Directions Presents
         </p>
 
-        <h4 class="hero-sub-title">Live Music Events</h4>
+        <h4 class="hero-sub-title">Live Events</h4>
         <h2
           class="hero-title"
           (mousemove)="onTitleMouseMove($event)"
@@ -258,6 +267,79 @@
         </h2>
       </li>
     </ul>
+  </div>
+</section>
+
+<!-- ====== Our Services ====== -->
+<section class="sd-services">
+  <div class="container">
+    <div class="sd-services__header">
+      <h2
+        class="sd-services__title"
+        (mousemove)="onTitleMouseMove($event)"
+        (mouseleave)="onTitleMouseLeave($event)"
+      >Our Services</h2>
+    </div>
+
+    <div class="sd-services__grid">
+
+      <!-- Media Production -->
+      <article
+        class="sd-service-card"
+        (mousemove)="onCardTilt($event)"
+        (mouseleave)="onCardTiltReset($event)"
+      >
+        <div class="sd-service-card__img-wrap">
+          <img
+            src="Lincoln+Reagan+Screens_Stage.webp"
+            alt="Media Production — Lincoln and Reagan stage screens"
+            class="sd-service-card__img"
+            loading="lazy"
+          />
+        </div>
+        <div class="sd-service-card__body">
+          <h3 class="sd-service-card__title">Media Production</h3>
+          <p class="sd-service-card__text">
+            Creative media production has always been a key component of our DNA. From concept to script to final cut, we have in-house production studios for sound design, graphics, animation, video editing or post production. We produce original music, record live bands and export to stereo or output multi-channel spatial, or immersive formats that match a custom audio environment. Broadcast video media is exported in formats from 4K to HD or web streaming. Today, production design goes beyond TV formats to custom screen sizes mapped to fill a building or outdoor space.
+          </p>
+          <a href="#" class="sd-service-card__cta">
+            Click to Learn More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Live Event Production -->
+      <article
+        class="sd-service-card"
+        (mousemove)="onCardTilt($event)"
+        (mouseleave)="onCardTiltReset($event)"
+      >
+        <div class="sd-service-card__img-wrap">
+          <img
+            src="CBB+FOH.webp"
+            alt="Live Event Production — Front of House setup"
+            class="sd-service-card__img"
+            loading="lazy"
+          />
+        </div>
+        <div class="sd-service-card__body">
+          <h3 class="sd-service-card__title">Live Event Production</h3>
+          <p class="sd-service-card__text">
+            We bring together the power of a creative media production company with an advanced AV staging company. We call that, &ldquo;The Power to Communicate.&rdquo;
+          </p>
+          <a href="#" class="sd-service-card__cta">
+            Click Here to Learn More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
   </div>
 </section>
 

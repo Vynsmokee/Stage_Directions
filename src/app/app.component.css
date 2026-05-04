@@ -144,13 +144,22 @@
   position: relative;
   overflow: hidden;
   z-index: 1;
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
   height: 100vh;
   display: flex;
   align-items: flex-end;
   padding-bottom: clamp(40px, 6vh, 100px);
+}
+
+/* Background video */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Dark overlay + subtle grain to mask low-res image */
@@ -861,4 +870,208 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ========================= Our Services ========================= */
+
+.sd-services {
+  background: #0a0a0a;
+  padding: 32px 0 120px;
+}
+
+.sd-services__header {
+  margin-bottom: 72px;
+  text-align: center;
+}
+
+.sd-services__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1rem;
+}
+
+.sd-services__title {
+  display: inline-block;
+  font-size: clamp(2.8rem, 7vw, 88px);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 1);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    #da178e 0%,
+    #4950a2 45%,
+    #068c54 95%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: color 0.45s ease;
+  cursor: default;
+}
+
+.sd-services__title:hover {
+  color: rgba(255, 255, 255, 0);
+}
+
+.sd-services__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .sd-services__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Card wrapper — 3D stage ── */
+.sd-service-card {
+  position: relative;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.12s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Glow spotlight that follows the cursor */
+.sd-service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(218, 23, 142, 0.18) 0%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.sd-service-card:hover::before {
+  opacity: 1;
+}
+
+.sd-service-card:hover {
+  border-color: rgba(218, 23, 142, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(218, 23, 142, 0.15),
+    0 24px 60px rgba(0, 0, 0, 0.7),
+    0 8px 20px rgba(218, 23, 142, 0.12);
+}
+
+/* Reset smoothly when mouse leaves */
+.sd-service-card {
+  transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.55s ease,
+              border-color 0.35s ease;
+}
+
+/* Image */
+.sd-service-card__img-wrap {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+}
+
+.sd-service-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s ease, filter 0.65s ease;
+  display: block;
+}
+
+.sd-service-card:hover .sd-service-card__img {
+  transform: scale(1.06);
+  filter: brightness(1.08);
+}
+
+.sd-service-card__img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(17, 17, 17, 0.85) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Body */
+.sd-service-card__body {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Accent line above title */
+.sd-service-card__body::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #da178e, #4950a2);
+  margin-bottom: 1.25rem;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.sd-service-card:hover .sd-service-card__body::before {
+  width: 72px;
+}
+
+.sd-service-card__title {
+  font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin-bottom: 0.75rem;
+}
+
+.sd-service-card__text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.sd-service-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #da178e;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(218, 23, 142, 0.35);
+  padding-bottom: 3px;
+  transition: color 0.25s ease, border-color 0.25s ease, gap 0.25s ease;
+}
+
+.sd-service-card__cta:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  gap: 0.75rem;
 }
