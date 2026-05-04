@@ -751,3 +751,109 @@
     display: flex;
   }
 }
+
+/* ========================= Sliding Text Marquee ========================= */
+
+.sd-marquee {
+  position: relative;
+  background: #0a0a0a;
+  padding: 56px 0 64px;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sd-marquee__wrap {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sd-marquee__list {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: fit-content;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  animation: sd-marquee-scroll 48s linear infinite;
+}
+
+.sd-marquee__list li {
+  position: relative;
+  display: block;
+  margin-right: 48px;
+}
+
+.sd-marquee__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.38);
+  font-size: clamp(52px, 7vw, 96px);
+  line-height: 1.05;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  transition: -webkit-text-stroke 0.3s ease;
+  cursor: default;
+  user-select: none;
+}
+
+.sd-marquee__item::before {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  background: linear-gradient(90deg, #da178e 0%, #4950a2 50%, #068c54 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  white-space: nowrap;
+  content: attr(data-hover);
+  transition: width 0.5s cubic-bezier(0.17, 0.67, 0.32, 0.87);
+}
+
+.sd-marquee__list li:hover .sd-marquee__item {
+  -webkit-text-stroke: 1px transparent;
+}
+
+.sd-marquee__list li:hover .sd-marquee__item::before {
+  width: 100%;
+}
+
+.sd-marquee__star {
+  width: clamp(32px, 3.5vw, 52px);
+  height: clamp(32px, 3.5vw, 52px);
+  color: #da178e;
+  flex-shrink: 0;
+  animation: sd-star-rotate 6s linear infinite;
+}
+
+/* Pause marquee on hover to let the text-reveal effect work */
+.sd-marquee:hover .sd-marquee__list {
+  animation-play-state: paused;
+}
+
+@keyframes sd-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sd-star-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
