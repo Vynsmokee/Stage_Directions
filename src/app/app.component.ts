@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild, ElementRef, NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,12 +6,23 @@ import { Component, OnInit, HostListener } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'Stage_Directions';
+
+  @ViewChild('marqueeWrap') marqueeWrapRef!: ElementRef<HTMLElement>;
+
+  private rafId: number | null = null;
+  private isDragging = false;
+  private dragStartX = 0;
+  private marqueeOffset = 0;
+  private readonly autoScrollSpeed = 1.2;
+  private cleanupFns: Array<() => void> = [];
 
   curtainDone = false;
   headerScrolled = false;
   mobileMenuOpen = false;
+
+  constructor(private ngZone: NgZone) {}
 
   readonly loadingLetters = 'LOADING'.split('');
 
@@ -66,6 +77,104 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => this.exitPreloader(), 2500);
+  }
+
+  ngAfterViewInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.startAutoScroll();
+      this.bindDragEvents();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+    }
+    this.cleanupFns.forEach(fn => fn());
+  }
+
+  private startAutoScroll(): void {
+    const wrap = this.marqueeWrapRef.nativeElement;
+    const list = wrap.querySelector('.sd-marquee__list') as HTMLElement;
+
+    const tick = () => {
+      const half = list.offsetWidth / 2;
+
+      if (half > 0) {
+        if (!this.isDragging) {
+          this.marqueeOffset -= this.autoScrollSpeed;
+        }
+        // Normalize into (-half, 0] in one step using modulo
+        this.marqueeOffset = this.marqueeOffset % half;
+        if (this.marqueeOffset > 0) this.marqueeOffset -= half;
+        list.style.transform = `translateX(${this.marqueeOffset}px)`;
+      }
+
+      this.rafId = requestAnimationFrame(tick);
+    };
+    this.rafId = requestAnimationFrame(tick);
+  }
+
+  private bindDragEvents(): void {
+    const wrap = this.marqueeWrapRef.nativeElement;
+    const list = wrap.querySelector('.sd-marquee__list') as HTMLElement;
+    let dragOffsetAtStart = 0;
+
+    const onMouseDown = (e: MouseEvent) => {
+      this.isDragging = true;
+      this.dragStartX = e.pageX;
+      dragOffsetAtStart = this.marqueeOffset;
+      wrap.classList.add('is-dragging');
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!this.isDragging) return;
+      const walk = (e.pageX - this.dragStartX) * 1.5;
+      const half = list.offsetWidth / 2;
+      if (half <= 0) return;
+      let next = (dragOffsetAtStart + walk) % half;
+      if (next > 0) next -= half;
+      this.marqueeOffset = next;
+    };
+
+    const onMouseUp = () => {
+      this.isDragging = false;
+      wrap.classList.remove('is-dragging');
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      this.isDragging = true;
+      this.dragStartX = e.touches[0].pageX;
+      dragOffsetAtStart = this.marqueeOffset;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!this.isDragging) return;
+      const walk = (e.touches[0].pageX - this.dragStartX) * 1.5;
+      const half = list.offsetWidth / 2;
+      if (half <= 0) return;
+      let next = (dragOffsetAtStart + walk) % half;
+      if (next > 0) next -= half;
+      this.marqueeOffset = next;
+    };
+
+    const onTouchEnd = () => { this.isDragging = false; };
+
+    wrap.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    wrap.addEventListener('touchstart', onTouchStart, { passive: true });
+    wrap.addEventListener('touchmove', onTouchMove, { passive: true });
+    wrap.addEventListener('touchend', onTouchEnd);
+
+    this.cleanupFns.push(
+      () => wrap.removeEventListener('mousedown', onMouseDown),
+      () => window.removeEventListener('mousemove', onMouseMove),
+      () => window.removeEventListener('mouseup', onMouseUp),
+      () => wrap.removeEventListener('touchstart', onTouchStart),
+      () => wrap.removeEventListener('touchmove', onTouchMove),
+      () => wrap.removeEventListener('touchend', onTouchEnd),
+    );
   }
 
   private exitPreloader(): void {
