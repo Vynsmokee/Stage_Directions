@@ -509,6 +509,105 @@
   </div>
 </section>
 
+<!-- ====== Testimonials ====== -->
+<section class="testi" #testiSection>
+  <div class="container testi__inner">
+    <header class="testi__header">
+      <p class="wwa__eyebrow">
+        <span class="eyebrow-line"></span>Client Stories
+      </p>
+      <h2 class="testi__title">What People<br /><em>Are&nbsp;Saying</em></h2>
+    </header>
+
+    <!-- Bento grid: 1 large featured + 2 stacked smaller -->
+    <div class="testi__bento">
+      <!-- Featured — spans 2 rows -->
+      <article class="testi__card testi__card--featured" #testiCard>
+        <div class="testi__quote-mark" aria-hidden="true">&ldquo;</div>
+        <p class="testi__quote">
+          Stage Directions transformed our annual conference into an
+          unforgettable experience. The lighting, sound, and production quality
+          were absolutely world-class. Every attendee left talking about the
+          show long after the lights went down.
+        </p>
+        <div class="testi__author">
+          <div class="testi__avatar testi__avatar--sarah"></div>
+          <div class="testi__author-info">
+            <span class="testi__name">Sarah Mitchell</span>
+            <span class="testi__role"
+              >Director of Events, TechSummit Global</span
+            >
+          </div>
+        </div>
+        <div class="testi__stars" aria-label="5 out of 5 stars">
+          <span class="testi__star" aria-hidden="true">★</span>
+          <span class="testi__star" aria-hidden="true">★</span>
+          <span class="testi__star" aria-hidden="true">★</span>
+          <span class="testi__star" aria-hidden="true">★</span>
+          <span class="testi__star" aria-hidden="true">★</span>
+        </div>
+      </article>
+
+      <!-- Secondary stack -->
+      <div class="testi__stack">
+        <article class="testi__card testi__card--secondary" #testiCard>
+          <div
+            class="testi__stars testi__stars--sm"
+            aria-label="5 out of 5 stars"
+          >
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+          </div>
+          <p class="testi__quote testi__quote--sm">
+            The team at Stage Directions delivered beyond our expectations.
+            Their attention to detail and creative problem-solving made our
+            product launch truly spectacular.
+          </p>
+          <div class="testi__author testi__author--sm">
+            <div class="testi__avatar testi__avatar--john"></div>
+            <div class="testi__author-info">
+              <span class="testi__name">John Ramirez</span>
+              <span class="testi__role">VP Marketing, NovaBrand</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="testi__card testi__card--accent" #testiCard>
+          <div
+            class="testi__stars testi__stars--sm"
+            aria-label="5 out of 5 stars"
+          >
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+            <span class="testi__star" aria-hidden="true">★</span>
+          </div>
+          <p class="testi__quote testi__quote--sm">
+            Flawless execution. From the first call to the final encore, Stage
+            Directions was professional, creative, and an absolute pleasure to
+            work with.
+          </p>
+          <div class="testi__author testi__author--sm">
+            <div class="testi__avatar testi__avatar--lisa"></div>
+            <div class="testi__author-info">
+              <span class="testi__name">Lisa Chen</span>
+              <span class="testi__role">Executive Producer, Horizon Live</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="testi__footer">
+      <a class="btn-primary" href="#">See Our Work</a>
+    </div>
+  </div>
+</section>
+
 <style>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);

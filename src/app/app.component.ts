@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('crawlMover') crawlMoverRef!: ElementRef<HTMLElement>;
   @ViewChild('starsCanvas') starsCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('wwaSection') wwaSectionRef!: ElementRef<HTMLElement>;
+  @ViewChild('testiSection') testiSectionRef!: ElementRef<HTMLElement>;
 
   private rafId: number | null = null;
   private starsRafId: number | null = null;
@@ -110,6 +111,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.startStars();
       this.initCrawlGsap();
       this.initBeamScrollAnim();
+      this.initTestiAnim();
     });
   }
 
@@ -460,6 +462,88 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         end: 'bottom top',
         scrub: 1.2,
       },
+    });
+  }
+
+  private initTestiAnim(): void {
+    const section = this.testiSectionRef?.nativeElement;
+    if (!section) return;
+
+    const header = section.querySelector<HTMLElement>('.testi__header');
+    const cards = Array.from(
+      section.querySelectorAll<HTMLElement>('.testi__card'),
+    );
+    const footer = section.querySelector<HTMLElement>('.testi__footer');
+
+    // Set initial state
+    if (header) gsap.set(header, { y: 40, opacity: 0 });
+    gsap.set(cards, { y: 50, opacity: 0 });
+    if (footer) gsap.set(footer, { y: 30, opacity: 0 });
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      once: true,
+      onEnter: () => {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        if (header) {
+          tl.to(header, { y: 0, opacity: 1, duration: 0.9 });
+        }
+
+        // Featured card first, then stack cards staggered
+        if (cards.length) {
+          tl.to(
+            cards[0],
+            { y: 0, opacity: 1, duration: 1.0, ease: 'power2.out' },
+            '-=0.4',
+          );
+          if (cards[1])
+            tl.to(cards[1], { y: 0, opacity: 1, duration: 0.8 }, '-=0.55');
+          if (cards[2])
+            tl.to(cards[2], { y: 0, opacity: 1, duration: 0.8 }, '-=0.6');
+        }
+
+        if (footer) {
+          tl.to(footer, { y: 0, opacity: 1, duration: 0.7 }, '-=0.4');
+        }
+      },
+    });
+
+    // Subtle hover 3D tilt per card
+    cards.forEach((card) => {
+      const onMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) / (rect.width / 2);
+        const dy = (e.clientY - cy) / (rect.height / 2);
+        gsap.to(card, {
+          rotateY: dx * 5,
+          rotateX: -dy * 4,
+          scale: 1.02,
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: 'auto',
+          transformPerspective: 900,
+        });
+      };
+      const onLeave = () => {
+        gsap.to(card, {
+          rotateY: 0,
+          rotateX: 0,
+          scale: 1,
+          duration: 0.55,
+          ease: 'power2.inOut',
+          overwrite: 'auto',
+        });
+      };
+      card.addEventListener('mousemove', onMove);
+      card.addEventListener('mouseleave', onLeave);
+      this.cleanupFns.push(
+        () => card.removeEventListener('mousemove', onMove),
+        () => card.removeEventListener('mouseleave', onLeave),
+      );
     });
   }
 
