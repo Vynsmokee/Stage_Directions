@@ -769,9 +769,32 @@
 /* ========================= Star Wars Crawl ========================= */
 
 .crawl-section {
-  height: 150vh;
-  background: #0a0a0a;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  position: relative;
+  height: 200vh;
+  background: #000;
+  border-top: none;
+}
+
+/* Section-level fade: blends from adjacent section bg (#0a0a0a) into the crawl (#000) */
+.crawl-section::before,
+.crawl-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 180px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.crawl-section::before {
+  top: 0;
+  background: linear-gradient(to bottom, #0a0a0a 0%, transparent 100%);
+}
+
+.crawl-section::after {
+  bottom: 0;
+  background: linear-gradient(to top, #0a0a0a 0%, transparent 100%);
 }
 
 .crawl-stage {
@@ -779,10 +802,11 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: #0a0a0a;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .crawl-stars {
@@ -799,8 +823,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 38%;
-  background: linear-gradient(to bottom, #0a0a0a 0%, transparent 100%);
+  height: 42%;
+  background: linear-gradient(to bottom, #000 0%, transparent 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -810,8 +834,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 22%;
-  background: linear-gradient(to top, #0a0a0a 0%, transparent 100%);
+  height: 26%;
+  background: linear-gradient(to top, #000 0%, transparent 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -819,37 +843,65 @@
 .crawl-perspective {
   width: 100%;
   height: 100%;
-  perspective: 520px;
-  perspective-origin: 50% 22%;
+  perspective: 480px;
+  perspective-origin: 50% 18%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .crawl-mover {
-  width: 54%;
-  max-width: 660px;
+  width: 58%;
+  max-width: 700px;
   will-change: transform;
-  transform: rotateX(22deg) translateY(90vh);
+  /* GSAP controls translateY — start below screen */
+  transform: rotateX(24deg) translateY(110vh);
   text-align: center;
 }
 
-.crawl-paragraph {
-  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
-  line-height: 1.85;
-  color: rgba(255, 255, 255, 0.72);
-  font-weight: 400;
-  letter-spacing: 0.04em;
+.crawl-logo {
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #ffe84b;
+  margin: 0 0 2.2rem;
+  line-height: 1.1;
+  text-shadow:
+    0 0 18px rgba(255, 232, 75, 0.55),
+    0 0 40px rgba(255, 200, 0, 0.25);
+}
+
+.crawl-episode {
+  font-size: clamp(0.78rem, 1.2vw, 1rem);
   font-style: italic;
+  color: rgba(255, 220, 60, 0.55);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 3rem;
+}
+
+.crawl-paragraph {
+  font-size: clamp(1rem, 1.7vw, 1.28rem);
+  line-height: 1.9;
+  color: rgba(255, 232, 75, 0.82);
+  font-weight: 400;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  margin: 0;
+  margin: 0 0 2.4rem;
+}
+
+.crawl-paragraph--closing {
+  color: rgba(255, 232, 75, 0.55);
+  font-size: clamp(0.88rem, 1.4vw, 1.08rem);
 }
 
 @media (max-width: 767px) {
   .crawl-mover {
-    width: 82%;
+    width: 84%;
   }
 }
 

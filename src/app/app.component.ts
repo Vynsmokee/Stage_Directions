@@ -30,12 +30,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private rafId: number | null = null;
   private starsRafId: number | null = null;
-  private crawlDriftRafId: number | null = null;
   private isDragging = false;
   private dragStartX = 0;
   private marqueeOffset = 0;
-  private crawlScrollY = 35; // vh from scroll
-  private crawlDriftY = 0; // vh from auto-drift
   private readonly autoScrollSpeed = 1.2;
   private cleanupFns: Array<() => void> = [];
 
@@ -58,7 +55,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:scroll')
   onScroll(): void {
     this.headerScrolled = window.scrollY > 40;
-    this.updateCrawl();
   }
 
   onTitleMouseMove(e: MouseEvent): void {
@@ -112,17 +108,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.startAutoScroll();
       this.bindDragEvents();
       this.startStars();
-      this.startCrawlDrift();
+      this.initCrawlGsap();
       this.initBeamScrollAnim();
     });
-    this.updateCrawl();
   }
 
   ngOnDestroy(): void {
     if (this.rafId !== null) cancelAnimationFrame(this.rafId);
     if (this.starsRafId !== null) cancelAnimationFrame(this.starsRafId);
-    if (this.crawlDriftRafId !== null)
-      cancelAnimationFrame(this.crawlDriftRafId);
     this.cleanupFns.forEach((fn) => fn());
     ScrollTrigger.getAll().forEach((t) => t.kill());
   }
@@ -443,50 +436,31 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.starsRafId = requestAnimationFrame(tick);
   }
 
-  private startCrawlDrift(): void {
-    const driftSpeed = 0.06; // vh per frame — noticeable crawl at 60fps
-    const tick = () => {
-      const section = this.crawlSectionRef?.nativeElement;
-      if (section) {
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        const inZone =
-          window.scrollY >= sectionTop &&
-          window.scrollY < sectionBottom - window.innerHeight;
-        if (inZone) {
-          this.crawlDriftY -= driftSpeed;
-          this.applyCrawlTransform();
-        }
-      }
-      this.crawlDriftRafId = requestAnimationFrame(tick);
-    };
-    this.crawlDriftRafId = requestAnimationFrame(tick);
-  }
-
-  private applyCrawlTransform(): void {
-    const mover = this.crawlMoverRef?.nativeElement;
-    if (!mover) return;
-    const y = this.crawlScrollY + this.crawlDriftY;
-    mover.style.transform = `rotateX(22deg) translateY(${y}vh)`;
-  }
-
-  private updateCrawl(): void {
+  private initCrawlGsap(): void {
     const section = this.crawlSectionRef?.nativeElement;
-    if (!section) return;
+    const mover = this.crawlMoverRef?.nativeElement;
+    if (!section || !mover) return;
 
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-    const scrollable = section.offsetHeight - window.innerHeight;
-    const progress = Math.max(
-      0,
-      Math.min(1, (window.scrollY - sectionTop) / scrollable),
-    );
+    // Keep the rotateX from CSS; GSAP only drives translateY via a proxy object
+    // so we can animate a plain numeric value and write it to the transform.
+    const proxy = { y: 110 }; // vh — starts below screen
 
-    // Reset drift on every scroll event so scrolling back down restores position
-    this.crawlDriftY = 0;
+    const updateTransform = () => {
+      mover.style.transform = `rotateX(24deg) translateY(${proxy.y}vh)`;
+    };
 
-    // Start partially visible (35vh) → end well above screen (-90vh)
-    this.crawlScrollY = 35 + (-90 - 35) * progress;
-    this.applyCrawlTransform();
+    // Scrub: y goes from 110vh (off-screen bottom) → -130vh (off-screen top)
+    gsap.to(proxy, {
+      y: -130,
+      ease: 'none',
+      onUpdate: updateTransform,
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.2,
+      },
+    });
   }
 
   private exitPreloader(): void {
