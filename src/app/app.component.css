@@ -1854,3 +1854,315 @@
     animation-duration: 16s;
   }
 }
+
+/* ========================= Social Stream ========================= */
+
+@keyframes stream-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes stream-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.sstream {
+  position: relative;
+  background: #000;
+  padding: 100px 0 0;
+  overflow: hidden;
+}
+
+/* subtle diagonal line texture */
+.sstream::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.012) 0px,
+    rgba(255, 255, 255, 0.012) 1px,
+    transparent 1px,
+    transparent 40px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* top + bottom fade masks */
+.sstream::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, #000 0%, transparent 12%),
+    linear-gradient(to top, #000 0%, transparent 12%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sstream__header {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding-inline: clamp(2rem, 6vw, 6rem);
+  margin-bottom: 56px;
+}
+
+.sstream__header .wwa__eyebrow {
+  justify-content: center;
+}
+
+.sstream__title {
+  font-size: clamp(2rem, 4vw, 52px);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 1rem;
+}
+
+.sstream__title em {
+  font-style: normal;
+  background: linear-gradient(90deg, #da178e 0%, #9b59b6 60%, #4950a2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sstream__sub {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+/* ── Grid of columns ── */
+.sstream__stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding-inline: 12px;
+  height: 640px;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .sstream__stage {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .sstream__col--4 {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .sstream__stage {
+    grid-template-columns: repeat(2, 1fr);
+    height: 520px;
+  }
+  .sstream__col--3 {
+    display: none;
+  }
+}
+
+/* ── Column wrappers ── */
+.sstream__col {
+  overflow: hidden;
+}
+
+.sstream__wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Column animations — each at different speed */
+.sstream__col--1 .sstream__wrap {
+  animation: stream-up 22s linear infinite;
+}
+.sstream__col--2 .sstream__wrap {
+  animation: stream-down 17s linear infinite;
+}
+.sstream__col--3 .sstream__wrap {
+  animation: stream-up 28s linear infinite;
+}
+.sstream__col--4 .sstream__wrap {
+  animation: stream-down 20s linear infinite;
+}
+
+.sstream__col:hover .sstream__wrap {
+  animation-play-state: paused;
+}
+
+/* ── Individual card (figure) ── */
+.sstream__item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Aspect ratios */
+.sstream__item--tall {
+  aspect-ratio: 9 / 16;
+}
+.sstream__item--wide {
+  aspect-ratio: 4 / 3;
+}
+.sstream__item--square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Placeholder image fills — replace with real <img> or background-image later */
+.sstream__img {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 12 distinct dark gradient placeholders */
+.sstream__img--1 {
+  background: linear-gradient(135deg, #1a0a2e 0%, #3d1060 100%);
+}
+.sstream__img--2 {
+  background: linear-gradient(135deg, #0d1b2a 0%, #1b4d6e 100%);
+}
+.sstream__img--3 {
+  background: linear-gradient(135deg, #1a0a0a 0%, #6e1030 100%);
+}
+.sstream__img--4 {
+  background: linear-gradient(135deg, #0d2a1a 0%, #1b6e40 100%);
+}
+.sstream__img--5 {
+  background: linear-gradient(135deg, #2a0d1a 0%, #6e1060 100%);
+}
+.sstream__img--6 {
+  background: linear-gradient(135deg, #0d0d2a 0%, #1b1b6e 100%);
+}
+.sstream__img--7 {
+  background: linear-gradient(135deg, #2a1a0d 0%, #6e4010 100%);
+}
+.sstream__img--8 {
+  background: linear-gradient(135deg, #0a1a0a 0%, #206020 100%);
+}
+.sstream__img--9 {
+  background: linear-gradient(135deg, #1a0a1a 0%, #601060 100%);
+}
+.sstream__img--10 {
+  background: linear-gradient(135deg, #0a0a1a 0%, #101060 100%);
+}
+.sstream__img--11 {
+  background: linear-gradient(135deg, #2a0a0a 0%, #801020 100%);
+}
+.sstream__img--12 {
+  background: linear-gradient(135deg, #0a1a2a 0%, #104080 100%);
+}
+
+/* Magenta glow border on featured items */
+.sstream__item[data-net="instagram"]:nth-child(odd) {
+  box-shadow:
+    0 0 0 1px rgba(218, 23, 142, 0.3),
+    0 0 20px rgba(218, 23, 142, 0.12);
+}
+
+/* ── Hover overlay ── */
+.sstream__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.35s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.sstream__item:hover .sstream__img {
+  transform: scale(1.06);
+}
+
+.sstream__item:hover .sstream__overlay {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.sstream__net-icon {
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.sstream__meta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0);
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+
+.sstream__item:hover .sstream__net-icon {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sstream__item:hover .sstream__meta {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Floating social CTA bar ── */
+.sstream__cta {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.4rem;
+  padding: 48px 0 80px;
+}
+
+.sstream__cta-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.sstream__cta-link svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  transition: filter 0.35s ease;
+}
+
+.sstream__cta-link:hover {
+  color: #fff;
+}
+
+.sstream__cta-link:hover svg {
+  filter: drop-shadow(0 0 8px rgba(218, 23, 142, 0.8));
+}
