@@ -961,9 +961,17 @@
   }
 }
 
+/* ========================= Our Services ========================= */
+
+.sd-services {
+  background: #0a0a0a;
+  padding-top: 32px;
+}
+
 .sd-services__container {
   max-width: 1200px;
   padding-inline: clamp(2rem, 6vw, 6rem);
+  padding-bottom: 100px;
 }
 
 .sd-services__header {
@@ -1073,7 +1081,7 @@
 /* Image */
 .sd-service-card__img-wrap {
   position: relative;
-  aspect-ratio: 16 / 6;
+  aspect-ratio: 16 / 5;
   overflow: hidden;
 }
 
@@ -1161,4 +1169,321 @@
   color: #fff;
   border-color: rgba(255, 255, 255, 0.45);
   gap: 0.75rem;
+}
+
+/* ========================= Who We Are ========================= */
+
+.wwa {
+  position: relative;
+  background: #0a0a0a;
+  padding: 120px 0 0;
+  overflow: hidden;
+}
+
+/* ── Stage light beams ── */
+.wwa__lights {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 82%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wwa__beam {
+  position: absolute;
+  bottom: 0;
+  width: 340px;
+  height: 100%;
+  clip-path: polygon(46% 100%, 54% 100%, 100% 0%, 0% 0%);
+  filter: blur(22px);
+  transform-origin: 50% 100%;
+}
+
+.wwa__beam--1 {
+  left: calc(10% - 170px);
+  background: linear-gradient(to top, rgba(218, 23, 142, 0.5) 0%, rgba(218, 23, 142, 0.06) 65%, transparent 100%);
+  transform: rotate(-22deg);
+  animation: wwa-sway-l 8s ease-in-out infinite;
+}
+.wwa__beam--2 {
+  left: calc(28% - 170px);
+  background: linear-gradient(to top, rgba(73, 80, 162, 0.38) 0%, rgba(73, 80, 162, 0.04) 65%, transparent 100%);
+  transform: rotate(-7deg);
+}
+.wwa__beam--3 {
+  left: calc(50% - 170px);
+  height: 65%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 55%, transparent 100%);
+  transform: rotate(0deg);
+}
+.wwa__beam--4 {
+  left: calc(70% - 170px);
+  background: linear-gradient(to top, rgba(6, 140, 84, 0.34) 0%, rgba(6, 140, 84, 0.04) 65%, transparent 100%);
+  transform: rotate(8deg);
+}
+.wwa__beam--5 {
+  left: calc(88% - 170px);
+  background: linear-gradient(to top, rgba(218, 23, 142, 0.42) 0%, rgba(218, 23, 142, 0.05) 65%, transparent 100%);
+  transform: rotate(22deg);
+  animation: wwa-sway-r 11s ease-in-out infinite;
+}
+
+@keyframes wwa-sway-l {
+  0%, 100% { transform: rotate(-22deg); }
+  50%       { transform: rotate(-14deg); }
+}
+@keyframes wwa-sway-r {
+  0%, 100% { transform: rotate(22deg); }
+  50%       { transform: rotate(14deg); }
+}
+
+/* ── Inner ── */
+.wwa__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  padding-inline: clamp(2rem, 6vw, 6rem);
+}
+
+/* ── Header ── */
+.wwa__header {
+  max-width: 580px;
+  margin-bottom: 72px;
+}
+
+.wwa__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.25rem;
+}
+
+.wwa__title {
+  font-size: clamp(2rem, 4.5vw, 56px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.5rem;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    #da178e 0%,
+    #4950a2 45%,
+    #068c54 95%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: color 0.45s ease;
+  cursor: default;
+  display: inline-block;
+}
+
+.wwa__title:hover {
+  color: rgba(255, 255, 255, 0);
+}
+
+.wwa__intro {
+  font-size: clamp(0.9rem, 1.3vw, 1.02rem);
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* ── Asymmetric grid ── */
+.wwa__grid {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 1.5rem;
+  margin-bottom: 72px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .wwa__grid { grid-template-columns: 1fr; }
+}
+
+/* ── Cards ── */
+.wwa__card {
+  position: relative;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  overflow: hidden;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.4s ease,
+              border-color 0.35s ease;
+  cursor: default;
+}
+
+.wwa__card:hover {
+  transform: translateY(-8px) translateZ(0);
+  border-color: rgba(218, 23, 142, 0.45);
+}
+
+/* ── Beam transitions (only center 3, avoid conflicting with sway animations) ── */
+.wwa__beam--2,
+.wwa__beam--3,
+.wwa__beam--4 {
+  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.6s ease;
+}
+.wwa__beam--1,
+.wwa__beam--5 {
+  transition: opacity 0.5s ease;
+}
+
+/* ── Any card hovered: fire up the 3 center spots, dim outer ── */
+.wwa:has(.wwa__card:hover) .wwa__beam--2 {
+  filter: blur(16px) brightness(5);
+}
+.wwa:has(.wwa__card:hover) .wwa__beam--3 {
+  filter: blur(12px) brightness(7);
+  opacity: 1;
+}
+.wwa:has(.wwa__card:hover) .wwa__beam--4 {
+  filter: blur(16px) brightness(5);
+}
+.wwa:has(.wwa__card:hover) .wwa__beam--1 {
+  opacity: 0.08;
+}
+.wwa:has(.wwa__card:hover) .wwa__beam--5 {
+  opacity: 0.08;
+}
+
+/* ── Expertise (left): all 3 center beams swing hard left ── */
+.wwa:has(.wwa__card--expertise:hover) .wwa__beam--2 {
+  transform: rotate(-24deg);
+  filter: blur(12px) brightness(7);
+}
+.wwa:has(.wwa__card--expertise:hover) .wwa__beam--3 {
+  transform: rotate(-16deg);
+  filter: blur(10px) brightness(8);
+}
+.wwa:has(.wwa__card--expertise:hover) .wwa__beam--4 {
+  transform: rotate(-6deg);
+  filter: blur(16px) brightness(5);
+}
+
+/* ── Technology (right): all 3 center beams swing hard right ── */
+.wwa:has(.wwa__card--technology:hover) .wwa__beam--2 {
+  transform: rotate(6deg);
+  filter: blur(16px) brightness(5);
+}
+.wwa:has(.wwa__card--technology:hover) .wwa__beam--3 {
+  transform: rotate(16deg);
+  filter: blur(10px) brightness(8);
+}
+.wwa:has(.wwa__card--technology:hover) .wwa__beam--4 {
+  transform: rotate(24deg);
+  filter: blur(12px) brightness(7);
+}
+
+/* Second card staggered down */
+.wwa__card--technology {
+  margin-top: 88px;
+}
+@media (max-width: 900px) {
+  .wwa__card--technology { margin-top: 0; }
+}
+
+.wwa__card-img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.wwa__card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.65s ease;
+}
+
+.wwa__card:hover .wwa__card-img img {
+  transform: scale(1.06);
+}
+
+.wwa__card-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 35%, rgba(17, 17, 17, 1) 100%);
+  pointer-events: none;
+}
+
+.wwa__card-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #fff;
+  z-index: 2;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+}
+
+.wwa__card-text {
+  padding: 1.25rem 1.5rem 1.75rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.75;
+}
+
+/* ── CTA ── */
+.wwa__footer {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 110px;
+}
+
+.wwa__cta {
+  padding: 1.1rem 3.2rem;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 0 0 rgba(218, 23, 142, 0);
+  transition:
+    background 0.25s ease,
+    transform 0.3s cubic-bezier(0.23,1,0.32,1),
+    box-shadow 0.35s ease;
+}
+
+.wwa__cta:hover {
+  transform: translateY(-6px) scale(1.04);
+  background: #da178e;
+  box-shadow:
+    0 0 32px 8px rgba(218, 23, 142, 0.45),
+    0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Button hover: same beam spotlight as cards ── */
+.wwa:has(.wwa__cta:hover) .wwa__beam--2 {
+  filter: blur(14px) brightness(6);
+  transform: rotate(-10deg);
+}
+.wwa:has(.wwa__cta:hover) .wwa__beam--3 {
+  filter: blur(10px) brightness(9);
+  opacity: 1;
+  transform: rotate(0deg);
+}
+.wwa:has(.wwa__cta:hover) .wwa__beam--4 {
+  filter: blur(14px) brightness(6);
+  transform: rotate(10deg);
+}
+.wwa:has(.wwa__cta:hover) .wwa__beam--1 {
+  opacity: 0.08;
+}
+.wwa:has(.wwa__cta:hover) .wwa__beam--5 {
+  opacity: 0.08;
 }

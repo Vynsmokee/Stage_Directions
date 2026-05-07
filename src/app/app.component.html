@@ -359,6 +359,63 @@
   </div>
 </section>
 
+<!-- ====== Who We Are ====== -->
+<section class="wwa">
+
+  <!-- Stage light beams from bottom -->
+  <div class="wwa__lights" aria-hidden="true">
+    <span class="wwa__beam wwa__beam--1"></span>
+    <span class="wwa__beam wwa__beam--2"></span>
+    <span class="wwa__beam wwa__beam--3"></span>
+    <span class="wwa__beam wwa__beam--4"></span>
+    <span class="wwa__beam wwa__beam--5"></span>
+  </div>
+
+  <div class="container wwa__inner">
+
+    <!-- Header: left-anchored, not centred -->
+    <div class="wwa__header">
+      <p class="wwa__eyebrow"><span class="eyebrow-line"></span>Who We Are</p>
+      <h2
+        class="wwa__title"
+        (mousemove)="onTitleMouseMove($event)"
+        (mouseleave)="onTitleMouseLeave($event)"
+      >Experience the Best<br>in Audio&#8209;Visual Services</h2>
+      <p class="wwa__intro">Bring your show to life with professional expertise, leading-edge technology, and exceptional customer service. Whether you're planning a special event, organizing a conference or renting equipment for an in-house meeting, our team is dedicated to making your event a success.</p>
+    </div>
+
+    <!-- Asymmetric feature grid -->
+    <div class="wwa__grid">
+
+      <article
+        class="wwa__card wwa__card--expertise"
+      >
+        <div class="wwa__card-img">
+          <img src="Big&Rich+MT.webp" alt="Expertise — Big &amp; Rich live concert" loading="lazy">
+          <div class="wwa__card-badge">Expertise</div>
+        </div>
+        <p class="wwa__card-text">The creative spirit of our team does not provide a &ldquo;one size fits all&rdquo; approach to your project. Clients love how we find unique ways to communicate their message through design and media production.</p>
+      </article>
+
+      <article
+        class="wwa__card wwa__card--technology"
+      >
+        <div class="wwa__card-img">
+          <img src="CBS+Sports+Desk1.webp" alt="Technology — CBS Sports production desk" loading="lazy">
+          <div class="wwa__card-badge">Technology</div>
+        </div>
+        <p class="wwa__card-text">Knowing the difference between the &ldquo;leading edge&rdquo; and &ldquo;bleeding edge&rdquo; of technology guides us in every purchase decision. We constantly update our equipment but it must be proven before it goes out on a show.</p>
+      </article>
+
+    </div>
+
+    <div class="wwa__footer">
+      <a class="btn-primary wwa__cta" href="#">Let&rsquo;s Talk</a>
+    </div>
+
+  </div>
+</section>
+
 <style>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);
