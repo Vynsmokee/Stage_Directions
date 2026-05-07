@@ -1108,6 +1108,147 @@
   </div>
 </section>
 
+<!-- ====== Contact ====== -->
+<section class="contact">
+  <!-- dot-matrix / circuit decorative bg -->
+  <div class="contact__dots" aria-hidden="true"></div>
+
+  <div class="contact__inner">
+    <!-- Left: Info column (40%) -->
+    <div class="contact__info">
+      <p class="wwa__eyebrow"><span class="eyebrow-line"></span>Get In Touch</p>
+      <h2 class="contact__title">
+        Let's Create<br /><em>Something&nbsp;Epic</em>
+      </h2>
+      <p class="contact__desc">
+        Whether you're planning an intimate corporate gathering or a
+        stadium-scale live production — our team brings world-class audio-visual
+        expertise to every stage.
+      </p>
+      <div class="contact__details">
+        <a class="contact__phone" href="tel:+15551234567">
+          <svg
+            class="contact__phone-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          >
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.95a16 16 0 0 0 6.13 6.13l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+            />
+          </svg>
+          <span>+1 (555) 123-4567</span>
+        </a>
+        <a class="contact__email" href="mailto:hello@stagedirections.com">
+          <svg
+            class="contact__email-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          >
+            <path
+              d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+            />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+          <span>hello&#64;stagedirections.com</span>
+        </a>
+      </div>
+      <!-- ambient glow blob -->
+      <div class="contact__blob" aria-hidden="true"></div>
+    </div>
+
+    <!-- Right: Form column (60%) -->
+    <div class="contact__form-wrap">
+      <form
+        class="contact__form"
+        novalidate
+        (ngSubmit)="$event.preventDefault()"
+      >
+        <div class="contact__field">
+          <label class="contact__label" for="c-name">Your Name</label>
+          <input
+            class="contact__input"
+            id="c-name"
+            name="name"
+            type="text"
+            placeholder="Jane Smith"
+            autocomplete="name"
+          />
+        </div>
+        <div class="contact__field">
+          <label class="contact__label" for="c-email">Email Address</label>
+          <input
+            class="contact__input"
+            id="c-email"
+            name="email"
+            type="email"
+            placeholder="jane&#64;company.com"
+            autocomplete="email"
+          />
+        </div>
+        <div class="contact__field contact__field--row">
+          <div class="contact__field">
+            <label class="contact__label" for="c-phone"
+              >Phone <span class="contact__optional">(optional)</span></label
+            >
+            <input
+              class="contact__input"
+              id="c-phone"
+              name="phone"
+              type="tel"
+              placeholder="+1 (555) 000-0000"
+              autocomplete="tel"
+            />
+          </div>
+          <div class="contact__field">
+            <label class="contact__label" for="c-event">Event Type</label>
+            <select
+              class="contact__input contact__select"
+              id="c-event"
+              name="event_type"
+            >
+              <option value="" disabled selected>Select event type</option>
+              <option>Corporate Event</option>
+              <option>Concert / Live Show</option>
+              <option>Conference</option>
+              <option>Product Launch</option>
+              <option>Festival</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="contact__field">
+          <label class="contact__label" for="c-msg"
+            >Tell Us About Your Vision</label
+          >
+          <textarea
+            class="contact__input contact__textarea"
+            id="c-msg"
+            name="message"
+            rows="5"
+            placeholder="Describe your event, expected attendance, technical needs..."
+          ></textarea>
+        </div>
+        <button class="contact__submit" type="submit">
+          <span>Send Message</span>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <style>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);
