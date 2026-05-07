@@ -941,8 +941,6 @@
   animation: sd-star-rotate 6s linear infinite;
 }
 
-
-
 @keyframes sd-marquee-scroll {
   from {
     transform: translateX(0);
@@ -1036,7 +1034,10 @@
   overflow: hidden;
   transform-style: preserve-3d;
   will-change: transform;
-  transition: transform 0.12s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
   cursor: default;
   display: flex;
   flex-direction: column;
@@ -1073,9 +1074,10 @@
 
 /* Reset smoothly when mouse leaves */
 .sd-service-card {
-  transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 0.55s ease,
-              border-color 0.35s ease;
+  transition:
+    transform 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.55s ease,
+    border-color 0.35s ease;
 }
 
 /* Image */
@@ -1089,7 +1091,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.65s ease, filter 0.65s ease;
+  transition:
+    transform 0.65s ease,
+    filter 0.65s ease;
   display: block;
 }
 
@@ -1102,7 +1106,11 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(17, 17, 17, 0.85) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(17, 17, 17, 0.85) 100%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -1162,7 +1170,10 @@
   text-decoration: none;
   border-bottom: 1px solid rgba(218, 23, 142, 0.35);
   padding-bottom: 3px;
-  transition: color 0.25s ease, border-color 0.25s ease, gap 0.25s ease;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    gap 0.25s ease;
 }
 
 .sd-service-card__cta:hover {
@@ -1178,65 +1189,6 @@
   background: #0a0a0a;
   padding: 120px 0 0;
   overflow: hidden;
-}
-
-/* ── Stage light beams ── */
-.wwa__lights {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 82%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.wwa__beam {
-  position: absolute;
-  bottom: 0;
-  width: 340px;
-  height: 100%;
-  clip-path: polygon(46% 100%, 54% 100%, 100% 0%, 0% 0%);
-  filter: blur(22px);
-  transform-origin: 50% 100%;
-}
-
-.wwa__beam--1 {
-  left: calc(10% - 170px);
-  background: linear-gradient(to top, rgba(218, 23, 142, 0.5) 0%, rgba(218, 23, 142, 0.06) 65%, transparent 100%);
-  transform: rotate(-22deg);
-  animation: wwa-sway-l 8s ease-in-out infinite;
-}
-.wwa__beam--2 {
-  left: calc(28% - 170px);
-  background: linear-gradient(to top, rgba(73, 80, 162, 0.38) 0%, rgba(73, 80, 162, 0.04) 65%, transparent 100%);
-  transform: rotate(-7deg);
-}
-.wwa__beam--3 {
-  left: calc(50% - 170px);
-  height: 65%;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 55%, transparent 100%);
-  transform: rotate(0deg);
-}
-.wwa__beam--4 {
-  left: calc(70% - 170px);
-  background: linear-gradient(to top, rgba(6, 140, 84, 0.34) 0%, rgba(6, 140, 84, 0.04) 65%, transparent 100%);
-  transform: rotate(8deg);
-}
-.wwa__beam--5 {
-  left: calc(88% - 170px);
-  background: linear-gradient(to top, rgba(218, 23, 142, 0.42) 0%, rgba(218, 23, 142, 0.05) 65%, transparent 100%);
-  transform: rotate(22deg);
-  animation: wwa-sway-r 11s ease-in-out infinite;
-}
-
-@keyframes wwa-sway-l {
-  0%, 100% { transform: rotate(-22deg); }
-  50%       { transform: rotate(-14deg); }
-}
-@keyframes wwa-sway-r {
-  0%, 100% { transform: rotate(22deg); }
-  50%       { transform: rotate(14deg); }
 }
 
 /* ── Inner ── */
@@ -1269,7 +1221,7 @@
   font-size: clamp(2rem, 4.5vw, 56px);
   font-weight: 900;
   color: #fff;
-  line-height: 1.0;
+  line-height: 1;
   letter-spacing: -0.03em;
   margin: 0 0 1.5rem;
   background: radial-gradient(
@@ -1306,7 +1258,9 @@
 }
 
 @media (max-width: 900px) {
-  .wwa__grid { grid-template-columns: 1fr; }
+  .wwa__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Cards ── */
@@ -1320,9 +1274,10 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 0.4s ease,
-              border-color 0.35s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.4s ease,
+    border-color 0.35s ease;
   cursor: default;
 }
 
@@ -1331,69 +1286,14 @@
   border-color: rgba(218, 23, 142, 0.45);
 }
 
-/* ── Beam transitions (only center 3, avoid conflicting with sway animations) ── */
-.wwa__beam--2,
-.wwa__beam--3,
-.wwa__beam--4 {
-  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.6s ease;
-}
-.wwa__beam--1,
-.wwa__beam--5 {
-  transition: opacity 0.5s ease;
-}
-
-/* ── Any card hovered: fire up the 3 center spots, dim outer ── */
-.wwa:has(.wwa__card:hover) .wwa__beam--2 {
-  filter: blur(16px) brightness(5);
-}
-.wwa:has(.wwa__card:hover) .wwa__beam--3 {
-  filter: blur(12px) brightness(7);
-  opacity: 1;
-}
-.wwa:has(.wwa__card:hover) .wwa__beam--4 {
-  filter: blur(16px) brightness(5);
-}
-.wwa:has(.wwa__card:hover) .wwa__beam--1 {
-  opacity: 0.08;
-}
-.wwa:has(.wwa__card:hover) .wwa__beam--5 {
-  opacity: 0.08;
-}
-
-/* ── Expertise (left): all 3 center beams swing hard left ── */
-.wwa:has(.wwa__card--expertise:hover) .wwa__beam--2 {
-  transform: rotate(-24deg);
-  filter: blur(12px) brightness(7);
-}
-.wwa:has(.wwa__card--expertise:hover) .wwa__beam--3 {
-  transform: rotate(-16deg);
-  filter: blur(10px) brightness(8);
-}
-.wwa:has(.wwa__card--expertise:hover) .wwa__beam--4 {
-  transform: rotate(-6deg);
-  filter: blur(16px) brightness(5);
-}
-
-/* ── Technology (right): all 3 center beams swing hard right ── */
-.wwa:has(.wwa__card--technology:hover) .wwa__beam--2 {
-  transform: rotate(6deg);
-  filter: blur(16px) brightness(5);
-}
-.wwa:has(.wwa__card--technology:hover) .wwa__beam--3 {
-  transform: rotate(16deg);
-  filter: blur(10px) brightness(8);
-}
-.wwa:has(.wwa__card--technology:hover) .wwa__beam--4 {
-  transform: rotate(24deg);
-  filter: blur(12px) brightness(7);
-}
-
 /* Second card staggered down */
 .wwa__card--technology {
   margin-top: 88px;
 }
 @media (max-width: 900px) {
-  .wwa__card--technology { margin-top: 0; }
+  .wwa__card--technology {
+    margin-top: 0;
+  }
 }
 
 .wwa__card-img {
@@ -1415,10 +1315,14 @@
 }
 
 .wwa__card-img::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 35%, rgba(17, 17, 17, 1) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(17, 17, 17, 1) 100%
+  );
   pointer-events: none;
 }
 
@@ -1455,7 +1359,7 @@
   box-shadow: 0 0 0 0 rgba(218, 23, 142, 0);
   transition:
     background 0.25s ease,
-    transform 0.3s cubic-bezier(0.23,1,0.32,1),
+    transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
     box-shadow 0.35s ease;
 }
 

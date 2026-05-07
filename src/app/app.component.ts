@@ -1,8 +1,21 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild, ElementRef, NgZone } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  NgZone,
+} from '@angular/core';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { LightRaysComponent } from './light-rays/light-rays.component';
+gsap.registerPlugin(ScrollTrigger);
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [LightRaysComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -13,6 +26,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('crawlSection') crawlSectionRef!: ElementRef<HTMLElement>;
   @ViewChild('crawlMover') crawlMoverRef!: ElementRef<HTMLElement>;
   @ViewChild('starsCanvas') starsCanvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('wwaSection') wwaSectionRef!: ElementRef<HTMLElement>;
 
   private rafId: number | null = null;
   private starsRafId: number | null = null;
@@ -20,8 +34,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private isDragging = false;
   private dragStartX = 0;
   private marqueeOffset = 0;
-  private crawlScrollY = 35;   // vh from scroll
-  private crawlDriftY = 0;     // vh from auto-drift
+  private crawlScrollY = 35; // vh from scroll
+  private crawlDriftY = 0; // vh from auto-drift
   private readonly autoScrollSpeed = 1.2;
   private cleanupFns: Array<() => void> = [];
 
@@ -72,8 +86,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     const rotY = (dx * 10).toFixed(2);
     const rotX = (-dy * 7).toFixed(2);
     card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.03,1.03,1.03)`;
-    card.style.setProperty('--glow-x', `${((e.clientX - rect.left) / rect.width * 100).toFixed(1)}%`);
-    card.style.setProperty('--glow-y', `${((e.clientY - rect.top) / rect.height * 100).toFixed(1)}%`);
+    card.style.setProperty(
+      '--glow-x',
+      `${(((e.clientX - rect.left) / rect.width) * 100).toFixed(1)}%`,
+    );
+    card.style.setProperty(
+      '--glow-y',
+      `${(((e.clientY - rect.top) / rect.height) * 100).toFixed(1)}%`,
+    );
   }
 
   onCardTiltReset(e: MouseEvent): void {
@@ -93,6 +113,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.bindDragEvents();
       this.startStars();
       this.startCrawlDrift();
+      this.initBeamScrollAnim();
     });
     this.updateCrawl();
   }
@@ -100,8 +121,174 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.rafId !== null) cancelAnimationFrame(this.rafId);
     if (this.starsRafId !== null) cancelAnimationFrame(this.starsRafId);
-    if (this.crawlDriftRafId !== null) cancelAnimationFrame(this.crawlDriftRafId);
-    this.cleanupFns.forEach(fn => fn());
+    if (this.crawlDriftRafId !== null)
+      cancelAnimationFrame(this.crawlDriftRafId);
+    this.cleanupFns.forEach((fn) => fn());
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+  }
+
+  private initBeamScrollAnim(): void {
+    const section = this.wwaSectionRef?.nativeElement;
+    if (!section) return;
+
+    const beams = Array.from(section.querySelectorAll<SVGElement>('svg path'));
+    const glow = section.querySelector<SVGElement>('svg ellipse');
+    const svg = section.querySelector<SVGSVGElement>('svg');
+
+    if (!beams.length) return;
+
+    // ── Initial hidden state ──────────────────────────────────────────
+    gsap.set(beams, { scaleY: 0, transformOrigin: '50% 100%', opacity: 0 });
+    if (glow)
+      gsap.set(glow, { scale: 0, transformOrigin: '50% 100%', opacity: 0 });
+
+    // ── Entrance: staggered rise from bottom-center outward ───────────
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 80%',
+      once: true,
+      onEnter: () => {
+        if (glow) {
+          gsap.to(glow, {
+            scale: 1,
+            opacity: 1,
+            duration: 1.4,
+            ease: 'power2.out',
+          });
+        }
+        gsap.to(beams, {
+          scaleY: 1,
+          opacity: 1,
+          duration: 2.2,
+          ease: 'power3.out',
+          stagger: { each: 0.16, from: 'center' },
+        });
+      },
+    });
+
+    // ── Scroll parallax: stretch + twist each beam as user scrolls ────
+    beams.forEach((beam, i) => {
+      const dir = i % 2 === 0 ? 1 : -1;
+      const skewAmt = dir * (0.8 + i * 0.25);
+      const scaleAmt = 1.05 + i * 0.012;
+      gsap.to(beam, {
+        scaleY: scaleAmt,
+        skewX: skewAmt,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 2.5,
+        },
+      });
+    });
+
+    // ── Card hover reactions ──────────────────────────────────────────
+    const cards = Array.from(
+      section.querySelectorAll<HTMLElement>('.wwa__card'),
+    );
+
+    const hoverIn = (direction: 'left' | 'right') => {
+      if (direction === 'left') {
+        gsap.to([beams[0], beams[1]], {
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+        gsap.to(beams[2], {
+          skewX: -3,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+        gsap.to([beams[3], beams[4]], {
+          opacity: 0.25,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+        if (glow)
+          gsap.to(glow, {
+            x: -70,
+            duration: 0.6,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          });
+      } else {
+        gsap.to([beams[3], beams[4]], {
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+        gsap.to(beams[2], {
+          skewX: 3,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+        gsap.to([beams[0], beams[1]], {
+          opacity: 0.25,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+        if (glow)
+          gsap.to(glow, {
+            x: 70,
+            duration: 0.6,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          });
+      }
+      if (svg)
+        gsap.to(svg, {
+          filter: 'brightness(1.8)',
+          duration: 0.45,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+    };
+
+    const hoverOut = () => {
+      gsap.to(beams, {
+        opacity: 1,
+        skewX: 0,
+        duration: 0.65,
+        ease: 'power2.inOut',
+        overwrite: 'auto',
+      });
+      if (glow)
+        gsap.to(glow, {
+          x: 0,
+          duration: 0.65,
+          ease: 'power2.inOut',
+          overwrite: 'auto',
+        });
+      if (svg)
+        gsap.to(svg, {
+          filter: 'brightness(1.0)',
+          duration: 0.6,
+          ease: 'power2.inOut',
+          overwrite: 'auto',
+        });
+    };
+
+    cards.forEach((card) => {
+      const dir = card.classList.contains('wwa__card--expertise')
+        ? 'left'
+        : 'right';
+      const onEnter = () => hoverIn(dir);
+      const onLeave = () => hoverOut();
+      card.addEventListener('mouseenter', onEnter);
+      card.addEventListener('mouseleave', onLeave);
+      this.cleanupFns.push(
+        () => card.removeEventListener('mouseenter', onEnter),
+        () => card.removeEventListener('mouseleave', onLeave),
+      );
+    });
   }
 
   private startAutoScroll(): void {
@@ -169,7 +356,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.marqueeOffset = next;
     };
 
-    const onTouchEnd = () => { this.isDragging = false; };
+    const onTouchEnd = () => {
+      this.isDragging = false;
+    };
 
     wrap.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
@@ -199,16 +388,32 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     resize();
     const resizeListener = () => resize();
     window.addEventListener('resize', resizeListener);
-    this.cleanupFns.push(() => window.removeEventListener('resize', resizeListener));
+    this.cleanupFns.push(() =>
+      window.removeEventListener('resize', resizeListener),
+    );
 
     // Three layers: tiny, small, medium stars
     const layers = [
-      { count: 180, minR: 0.25, maxR: 0.7,  minB: 0.15, maxB: 0.55, speed: 0.0012 },
-      { count: 80,  minR: 0.7,  maxR: 1.2,  minB: 0.35, maxB: 0.75, speed: 0.0022 },
-      { count: 25,  minR: 1.2,  maxR: 2.0,  minB: 0.55, maxB: 1.0,  speed: 0.0035 },
+      {
+        count: 180,
+        minR: 0.25,
+        maxR: 0.7,
+        minB: 0.15,
+        maxB: 0.55,
+        speed: 0.0012,
+      },
+      {
+        count: 80,
+        minR: 0.7,
+        maxR: 1.2,
+        minB: 0.35,
+        maxB: 0.75,
+        speed: 0.0022,
+      },
+      { count: 25, minR: 1.2, maxR: 2.0, minB: 0.55, maxB: 1.0, speed: 0.0035 },
     ];
 
-    const stars = layers.flatMap(l =>
+    const stars = layers.flatMap((l) =>
       Array.from({ length: l.count }, () => ({
         x: Math.random(),
         y: Math.random(),
@@ -216,7 +421,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         base: l.minB + Math.random() * (l.maxB - l.minB),
         phase: Math.random() * Math.PI * 2,
         speed: l.speed + Math.random() * 0.001,
-      }))
+      })),
     );
 
     const tick = (t: number) => {
@@ -224,7 +429,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
       for (const s of stars) {
-        const opacity = Math.max(0, Math.min(1, s.base + Math.sin(t * s.speed + s.phase) * 0.06));
+        const opacity = Math.max(
+          0,
+          Math.min(1, s.base + Math.sin(t * s.speed + s.phase) * 0.06),
+        );
         ctx.beginPath();
         ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255,255,255,${opacity.toFixed(3)})`;
@@ -242,7 +450,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       if (section) {
         const sectionTop = section.offsetTop;
         const sectionBottom = sectionTop + section.offsetHeight;
-        const inZone = window.scrollY >= sectionTop && window.scrollY < sectionBottom - window.innerHeight;
+        const inZone =
+          window.scrollY >= sectionTop &&
+          window.scrollY < sectionBottom - window.innerHeight;
         if (inZone) {
           this.crawlDriftY -= driftSpeed;
           this.applyCrawlTransform();
@@ -266,7 +476,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const sectionTop = section.getBoundingClientRect().top + window.scrollY;
     const scrollable = section.offsetHeight - window.innerHeight;
-    const progress = Math.max(0, Math.min(1, (window.scrollY - sectionTop) / scrollable));
+    const progress = Math.max(
+      0,
+      Math.min(1, (window.scrollY - sectionTop) / scrollable),
+    );
 
     // Reset drift on every scroll event so scrolling back down restores position
     this.crawlDriftY = 0;
