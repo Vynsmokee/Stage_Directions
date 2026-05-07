@@ -10,11 +10,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'Stage_Directions';
 
   @ViewChild('marqueeWrap') marqueeWrapRef!: ElementRef<HTMLElement>;
+  @ViewChild('crawlSection') crawlSectionRef!: ElementRef<HTMLElement>;
+  @ViewChild('crawlMover') crawlMoverRef!: ElementRef<HTMLElement>;
+  @ViewChild('starsCanvas') starsCanvasRef!: ElementRef<HTMLCanvasElement>;
 
   private rafId: number | null = null;
+  private starsRafId: number | null = null;
+  private crawlDriftRafId: number | null = null;
   private isDragging = false;
   private dragStartX = 0;
   private marqueeOffset = 0;
+  private crawlScrollY = 35;   // vh from scroll
+  private crawlDriftY = 0;     // vh from auto-drift
   private readonly autoScrollSpeed = 1.2;
   private cleanupFns: Array<() => void> = [];
 
@@ -37,6 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:scroll')
   onScroll(): void {
     this.headerScrolled = window.scrollY > 40;
+    this.updateCrawl();
   }
 
   onTitleMouseMove(e: MouseEvent): void {
@@ -83,13 +91,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       this.startAutoScroll();
       this.bindDragEvents();
+      this.startStars();
+      this.startCrawlDrift();
     });
+    this.updateCrawl();
   }
 
   ngOnDestroy(): void {
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-    }
+    if (this.rafId !== null) cancelAnimationFrame(this.rafId);
+    if (this.starsRafId !== null) cancelAnimationFrame(this.starsRafId);
+    if (this.crawlDriftRafId !== null) cancelAnimationFrame(this.crawlDriftRafId);
     this.cleanupFns.forEach(fn => fn());
   }
 
@@ -175,6 +186,94 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       () => wrap.removeEventListener('touchmove', onTouchMove),
       () => wrap.removeEventListener('touchend', onTouchEnd),
     );
+  }
+
+  private startStars(): void {
+    const canvas = this.starsCanvasRef.nativeElement;
+    const ctx = canvas.getContext('2d')!;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    const resizeListener = () => resize();
+    window.addEventListener('resize', resizeListener);
+    this.cleanupFns.push(() => window.removeEventListener('resize', resizeListener));
+
+    // Three layers: tiny, small, medium stars
+    const layers = [
+      { count: 180, minR: 0.25, maxR: 0.7,  minB: 0.15, maxB: 0.55, speed: 0.0012 },
+      { count: 80,  minR: 0.7,  maxR: 1.2,  minB: 0.35, maxB: 0.75, speed: 0.0022 },
+      { count: 25,  minR: 1.2,  maxR: 2.0,  minB: 0.55, maxB: 1.0,  speed: 0.0035 },
+    ];
+
+    const stars = layers.flatMap(l =>
+      Array.from({ length: l.count }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: l.minR + Math.random() * (l.maxR - l.minR),
+        base: l.minB + Math.random() * (l.maxB - l.minB),
+        phase: Math.random() * Math.PI * 2,
+        speed: l.speed + Math.random() * 0.001,
+      }))
+    );
+
+    const tick = (t: number) => {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      for (const s of stars) {
+        const opacity = Math.max(0, Math.min(1, s.base + Math.sin(t * s.speed + s.phase) * 0.06));
+        ctx.beginPath();
+        ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${opacity.toFixed(3)})`;
+        ctx.fill();
+      }
+      this.starsRafId = requestAnimationFrame(tick);
+    };
+    this.starsRafId = requestAnimationFrame(tick);
+  }
+
+  private startCrawlDrift(): void {
+    const driftSpeed = 0.06; // vh per frame — noticeable crawl at 60fps
+    const tick = () => {
+      const section = this.crawlSectionRef?.nativeElement;
+      if (section) {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        const inZone = window.scrollY >= sectionTop && window.scrollY < sectionBottom - window.innerHeight;
+        if (inZone) {
+          this.crawlDriftY -= driftSpeed;
+          this.applyCrawlTransform();
+        }
+      }
+      this.crawlDriftRafId = requestAnimationFrame(tick);
+    };
+    this.crawlDriftRafId = requestAnimationFrame(tick);
+  }
+
+  private applyCrawlTransform(): void {
+    const mover = this.crawlMoverRef?.nativeElement;
+    if (!mover) return;
+    const y = this.crawlScrollY + this.crawlDriftY;
+    mover.style.transform = `rotateX(22deg) translateY(${y}vh)`;
+  }
+
+  private updateCrawl(): void {
+    const section = this.crawlSectionRef?.nativeElement;
+    if (!section) return;
+
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    const scrollable = section.offsetHeight - window.innerHeight;
+    const progress = Math.max(0, Math.min(1, (window.scrollY - sectionTop) / scrollable));
+
+    // Reset drift on every scroll event so scrolling back down restores position
+    this.crawlDriftY = 0;
+
+    // Start partially visible (35vh) → end well above screen (-90vh)
+    this.crawlScrollY = 35 + (-90 - 35) * progress;
+    this.applyCrawlTransform();
   }
 
   private exitPreloader(): void {

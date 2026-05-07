@@ -213,12 +213,19 @@
   </div>
 </section>
 
-<!-- ====== Marquee Intro ====== -->
-<section class="sd-marquee-intro">
-  <div class="container">
-    <p class="sd-marquee-intro__text">
-      Since our first event in 1987, Stage Directions has been a leading force in creating powerful experiences bringing together creativity with advanced technology. From intimate gatherings to grand spectacles, from one site to venues across the globe we create powerful media and events that captures the audience's imagination leaving behind unforgettable memories.
-    </p>
+<!-- ====== Star Wars Crawl ====== -->
+<section class="crawl-section" #crawlSection>
+  <div class="crawl-stage">
+    <canvas #starsCanvas class="crawl-stars"></canvas>
+    <div class="crawl-fade-top"></div>
+    <div class="crawl-fade-bottom"></div>
+    <div class="crawl-perspective">
+      <div class="crawl-mover" #crawlMover>
+        <p class="crawl-paragraph">
+          Since our first event in 1987, Stage Directions has been a leading force in creating powerful experiences bringing together creativity with advanced technology. From intimate gatherings to grand spectacles, from one site to venues across the globe we create powerful media and events that captures the audience's imagination leaving behind unforgettable memories.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -281,7 +288,7 @@
 
 <!-- ====== Our Services ====== -->
 <section class="sd-services">
-  <div class="container">
+  <div class="container sd-services__container">
     <div class="sd-services__header">
       <h2
         class="sd-services__title"
