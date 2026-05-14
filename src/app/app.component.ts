@@ -22,6 +22,7 @@ gsap.registerPlugin(ScrollTrigger);
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'Stage_Directions';
 
+  @ViewChild('heroVideo') heroVideoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('marqueeWrap') marqueeWrapRef!: ElementRef<HTMLElement>;
   @ViewChild('crawlSection') crawlSectionRef!: ElementRef<HTMLElement>;
   @ViewChild('crawlMover') crawlMoverRef!: ElementRef<HTMLElement>;
@@ -106,6 +107,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
+      this.ensureHeroVideoPlayback();
       this.startAutoScroll();
       this.bindDragEvents();
       this.startStars();
@@ -555,6 +557,46 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     preloader.classList.add('is-exiting');
     setTimeout(() => {
       this.curtainDone = true;
+      this.ensureHeroVideoPlayback();
     }, 1650);
+  }
+
+  private ensureHeroVideoPlayback(): void {
+    const video = this.heroVideoRef?.nativeElement;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+
+    const playVideo = () => {
+      video
+        .play()
+        .catch(() => {
+          // Some browsers reject the first autoplay attempt while the page is settling.
+        });
+    };
+
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      playVideo();
+    } else {
+      const onCanPlay = () => {
+        playVideo();
+        video.removeEventListener('canplay', onCanPlay);
+      };
+      video.addEventListener('canplay', onCanPlay);
+      this.cleanupFns.push(() => video.removeEventListener('canplay', onCanPlay));
+      video.load();
+    }
+
+    const onVisibilityChange = () => {
+      if (!document.hidden && video.paused) {
+        playVideo();
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    this.cleanupFns.push(() =>
+      document.removeEventListener('visibilitychange', onVisibilityChange),
+    );
   }
 }

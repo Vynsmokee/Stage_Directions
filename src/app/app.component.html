@@ -115,12 +115,14 @@
 <section class="hero-area" [class.hero-visible]="curtainDone">
   <!-- Background video -->
   <video
+    #heroVideo
     class="hero-video"
     src="herovideostage.webm"
     autoplay
     muted
     loop
     playsinline
+    preload="auto"
     aria-hidden="true"
   ></video>
   <div class="container">
